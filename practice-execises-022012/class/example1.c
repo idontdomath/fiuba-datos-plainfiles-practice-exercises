@@ -72,7 +72,6 @@ int main(int argc, char** argv) {
 		return -1
 	}
 
-	//FIXME NOTA AL RESPECTO DE USO DEL OPERADOR
 	I_START(fd_idx, sec_idx, "<", record);
 	//tener en cuenta el caso de RES_ERROR
 	while (I_READNEXT(fd_idx, sec_idx, record) != RES_EOF) {
