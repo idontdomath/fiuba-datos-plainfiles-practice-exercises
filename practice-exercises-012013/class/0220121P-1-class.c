@@ -44,7 +44,7 @@ int task(int color, int magnitude) {
 
 	REG_SET(buffer_stars, schema_stars, "COLOR", color, "MAGNITUD", magnitude);
 
-	I_START(fd_idx, idx, "", buffer_stars);
+	I_START(fd_idx, idx, "=", buffer_stars);
 	status = I_READNEXT(fd_idx, idx, buffer_stars);
 
 	while (status != RES_EOF) {
