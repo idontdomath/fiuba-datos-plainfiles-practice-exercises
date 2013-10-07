@@ -27,6 +27,7 @@ int relative_creation(const char * filename, int record_number) {
 //lectura por referencia en un relativo por numero de celda
 int relative_read_by_cell_reference(const char * filename, int cell_number) {
 
+	char[20] name;
 	void * reg = malloc(REG_SIZEOF(schema_students));
 
 	int fd = R_OPEN(filename, READ);
@@ -51,6 +52,8 @@ int relative_read_by_cell_reference(const char * filename, int cell_number) {
 //lectura secuencial en un relativo
 int relative_sequential_read(const char * filename) {
 
+	int student_id;
+	char[20] name;
 	void * reg = malloc(REG_SIZEOF(schema_students));
 
 	int fd = R_OPEN(filename, READ);
@@ -59,9 +62,6 @@ int relative_sequential_read(const char * filename) {
 		free(reg);
 		return -1;
 	}
-
-	int student_id;
-	char[20] name;
 
 	//posicionamos en record pointer en la primer celda
 	int status == R_SEEK(fd, 0);
@@ -99,6 +99,8 @@ int relative_write(const char * filename, int cell_number, int student_id, char 
 		free(reg);
 		return -1;
 	}
+	//movemos los datos a escribir al registro de intercambio
+	REG_GET(reg, schema_students, "PADRON,NOMBRE,APELLIDO", &student_id, &name, &surname);
 
 	//escribimos en la celda pasada por parametros
 	int status = R_WRITE(fd, cell_number, reg);
@@ -110,7 +112,7 @@ int relative_write(const char * filename, int cell_number, int student_id, char 
 		
 	//liberamos recursos usados
 	free(reg);
-	S_CLOSE(fd);
+	R_CLOSE(fd);
 
 	if (status == RES_ERROR) {
 		//se produjo un error

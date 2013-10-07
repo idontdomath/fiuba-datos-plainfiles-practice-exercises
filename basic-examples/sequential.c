@@ -71,6 +71,9 @@ int sequential_write(const char * filename, int student_id, char * name, char * 
 		return -1;
 	}
 
+	//movemos los datos a escribir al registro de intercambio
+	REG_GET(reg, schema_students, "PADRON,NOMBRE,APELLIDO", &student_id, &name, &surname);
+
 	int status = S_WRITE(fd, reg, REG_SIZEOF(schema_students));
 
 	//liberamos recursos usados
