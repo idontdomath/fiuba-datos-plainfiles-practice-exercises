@@ -72,7 +72,7 @@ float temperature_report(char * filename, char * city_name) {
 	}
 
 	I_CLOSE(fd_idx);
-	free(fd_idx);
+	free(record);
 
 	return max_temp_acum / days_count;
 
