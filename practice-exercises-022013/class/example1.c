@@ -15,6 +15,9 @@ luego realizar un promedio de la hora a la cual ocurrieron dichas temperaturas.
 - suponemos que hay una unica temperatura maxima
 - suponemos que las horas van de 0 a 23
 */
+
+#define MIN_TEMP -2000
+
 float temperature_report(char * filename, char * city_name) {
 
 	campo schema_city[] = {{"CIUDAD", CHAR, 80}, {"DIA", INT, 1}, {"HORA", INT, 1},
@@ -36,12 +39,12 @@ float temperature_report(char * filename, char * city_name) {
 	I_START(fd_idx, 0, ">=", record);
 
 	int res;
-	char[80] current_city = ''
+	char * current_city;
 	int current_day;
 	int current_hour;
 	int day;
 
-	int max_temp = 0;
+	int max_temp = MIN_TEMP;
 	int max_temp_hour = 0;
 
 	int days_count = 0
@@ -50,7 +53,7 @@ float temperature_report(char * filename, char * city_name) {
 	//leemos el primer registro
 	//quedan pendientes controles de errores
 	res = I_READNEXT(fd_idx, 0, record);	
-	REG_GET(record,schema_city,"CIUDAD,DIA,HORA,TEMPERATURA",&current_city,&current_day,&current_hour,&current_temp);
+	REG_GET(record,schema_city,"CIUDAD,DIA,HORA,TEMPERATURA",current_city,&current_day,&current_hour,&current_temp);
 	day = current_day;
 	while (res != RES_EOF && current_city == city_name) {
 		while (res != RES_EOF && current_city == city_name && current_day == day) {
@@ -66,14 +69,15 @@ float temperature_report(char * filename, char * city_name) {
 		//dado que el dia cambio
 		max_temp_acum += max_temp;
 		days_count++;
-		max_temp = 0;
-		//imprimimos los resultados para ese dia
+		max_temp = MIN_TEMP;
 		day = current_day;
 	}
 
 	I_CLOSE(fd_idx);
 	free(record);
-
-	return max_temp_acum / days_count;
+	
+	if (days_count > 0) { 
+		return max_temp_acum / days_count;
+	}
 
 }
